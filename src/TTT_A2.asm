@@ -10,18 +10,32 @@ section .data
     pipe_symbol             db     "|"
     x_symbol                db     "X"
     o_symbol                db     "O"
-    one                     db    1
+
+    x_symbol_braced         db     " (X)"
+    x_symbol_braced_len     equ    $-x_symbol_braced
+
+    o_symbol_braced         db     " (O)"
+    o_symbol_braced_len     equ    $-o_symbol_braced
+
+    
+    apostrophe_s_text       db     "'s"
+    apostrophe_s_text_len   equ    $-o_symbol_braced
 
 
     vs_text                 db     " v/s "
     vs_text_len             equ     $-vs_text
+    
+    new_line_token          db      0xA, 0xD
+    new_line_token_len      equ     $-new_line_token
 
 ; bss section
 SECTION .bss     
     name_player_x              resb    256 
-    name_player_x_len          resb    10
+    name_player_x_len          resb    4
     name_player_o              resb    256
-    name_player_o_len          resb    10 
+    name_player_o_len          resb    4 
+
+    placement_input            resb     10
 
     read_len                resb    10
 
@@ -32,13 +46,23 @@ global      _start
 _start:
     call Prompt_Name_Player_X
     call Prompt_Name_Player_O
-    call Print_Name_Player_X
-    call Print_Name_Player_O    
+    call Print_Game_Header
     jmp Exit
 
+Print_Game_Header:
+    call Print_Name_Player_X
 
+    mov ecx, vs_text
+    mov edx, vs_text_len
+    call Print
 
-; Input: none
+    call Print_Name_Player_O
+
+    mov ecx, new_line_token
+    mov edx, new_line_token_len
+    call Print
+    ret
+
 ; Output: none
 ; Prompts user and Reads the name of user X from the keyboard
 Prompt_Name_Player_X:
@@ -69,6 +93,11 @@ Print_Name_Player_X:
     mov edx, [name_player_x_len]
     sub edx, 1                  ; to remove newline
     call Print
+
+    mov ecx, x_symbol_braced 
+    mov edx, x_symbol_braced_len
+    call Print
+
     ret
 
 ; Input: none
@@ -101,7 +130,13 @@ Print_Name_Player_O:
     mov edx, [name_player_o_len]
     sub edx, 1                  ; to remove newline
     call Print
+    
+    mov ecx, o_symbol_braced 
+    mov edx, o_symbol_braced_len
+    call Print
+
     ret
+    
 
 ; Input:
 ;   ecx=memory reference to the text
@@ -114,7 +149,7 @@ Print:
     int     80H 
     ret
 
-; Input:
+
 ;   ecx = input buffer
 ; Output:
 ;   string read into the buffer referenced by ecx
