@@ -6,10 +6,13 @@ section .data
 
     ; some symbols to be used
     colon                   db      ": "
-    dash_symbol             db     "-"
+    underscore_symbol       db     "_"
     pipe_symbol             db     "|"
+
     x_symbol                db     "X"
     o_symbol                db     "O"
+
+    space                   db     " "
 
     x_symbol_braced         db     " (X)"
     x_symbol_braced_len     equ    $-x_symbol_braced
@@ -18,8 +21,11 @@ section .data
     o_symbol_braced_len     equ    $-o_symbol_braced
 
     
-    apostrophe_s_text       db     "'s"
-    apostrophe_s_text_len   equ    $-o_symbol_braced
+    turn_prompt_text       db     "'s turn: Please enter the position to place your sign (1-9): "
+    turn_prompt_text_len   equ    $-turn_prompt_text
+
+    winner_dec_text       db     ", Congratulations! You are the WINNER !!! ",0xA, 0xD,0xA, 0xD
+    winner_dec_text_len   equ    $-winner_dec_text
 
 
     vs_text                 db     " v/s "
@@ -27,6 +33,21 @@ section .data
     
     new_line_token          db      0xA, 0xD
     new_line_token_len      equ     $-new_line_token
+
+
+    placement_error_txt         db      "Cannot Place a marker at this position, Try Again!",0xA, 0xD
+    placement_error_txt_len     equ     $-placement_error_txt
+
+    ;o_board_sign            db      1
+    ;x_board_sign            db      2
+
+    ; pointer to the Tic-Tac-Toe Board
+    
+    board                   db      "1","2","3",\
+                                    "4","5","6",\
+                                    "7","8","9"
+
+    test_txt                db      "123"
 
 ; bss section
 SECTION .bss     
@@ -36,6 +57,7 @@ SECTION .bss
     name_player_o_len          resb    4 
 
     placement_input            resb     10
+    placement_input_len        resb     4
 
     read_len                resb    10
 
@@ -46,122 +68,21 @@ global      _start
 _start:
     call Prompt_Name_Player_X
     call Prompt_Name_Player_O
-    call Print_Game_Header
+    ;call Game_Loop
+     call Declare_Win_Player_X_And_Exit
+    ;call Print_Game_Header 
+    
+    ;call Print_Board 
+
     jmp Exit
 
-Print_Game_Header:
-    call Print_Name_Player_X
 
-    mov ecx, vs_text
-    mov edx, vs_text_len
-    call Print
-
-    call Print_Name_Player_O
-
-    mov ecx, new_line_token
-    mov edx, new_line_token_len
-    call Print
-    ret
-
-; Output: none
-; Prompts user and Reads the name of user X from the keyboard
-Prompt_Name_Player_X:
-    ;Prints the prompt for name for X
-    mov ecx, player_name_prompt
-    mov edx, player_name_prompt_len
-    call Print
-
-    mov ecx, x_symbol
-    mov edx, 1
-    call Print
-
-    mov ecx, colon
-    mov edx, 2
-    call Print 
-
-    ; read input from the keyboard
-    mov ecx, name_player_x 
-    call Read_Input
-    mov  eax, [read_len]
-    mov  [name_player_x_len], eax  ; restore the length
-    ret
-
-; Input: none
-; Output: Print name of user X
-Print_Name_Player_X:
-    mov ecx, name_player_x
-    mov edx, [name_player_x_len]
-    sub edx, 1                  ; to remove newline
-    call Print
-
-    mov ecx, x_symbol_braced 
-    mov edx, x_symbol_braced_len
-    call Print
-
-    ret
-
-; Input: none
-; Output: none
-; Prompts user and Reads the name of user O from the keyboard
-Prompt_Name_Player_O:
-    mov ecx, player_name_prompt
-    mov edx, player_name_prompt_len
-    call Print
-
-    mov ecx, o_symbol
-    mov edx, 1
-    call Print
-
-    mov ecx, colon
-    mov edx, 2
-    call Print 
-
-    ; read input from the keyboard
-    mov ecx, name_player_o 
-    call Read_Input
-    mov  eax, [read_len]
-    mov  [name_player_o_len], eax  ; restore the length
-    ret
-
-; Input: none
-; Output: Print name of user O
-Print_Name_Player_O:
-    mov ecx, name_player_o
-    mov edx, [name_player_o_len]
-    sub edx, 1                  ; to remove newline
-    call Print
-    
-    mov ecx, o_symbol_braced 
-    mov edx, o_symbol_braced_len
-    call Print
-
-    ret
-    
-
-; Input:
-;   ecx=memory reference to the text
-;   edx=length of the text to Print
-; Output:
-;   Prints the text to the screen
-Print:
-    mov     eax, 4          ;syswrite
-    mov     ebx, 1          ;stdout 1 | stderr 3
-    int     80H 
-    ret
-
-
-;   ecx = input buffer
-; Output:
-;   string read into the buffer referenced by ecx
-;   eax = length of the string read
-Read_Input:
-    mov     eax, 3          ;sysread
-    mov     ebx, 0          ;stdin
-    mov     edx, 50
-    int     80H
-    mov     [read_len], eax
-    ret 
-
+%include './includes/GameLogic.asm' 
+%include './includes/Board.asm' 
+%include './includes/Prompts.asm'  
+%include './includes/Prints.asm'    
+%include './includes/BasicIO.asm' 
+%include './includes/Utils.asm'
 
 Exit:  
     mov     eax, 1          ;sysexit
