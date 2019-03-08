@@ -1,8 +1,9 @@
+; Prints the text to the screen
 ; Input:
 ;   ecx=memory reference to the text
 ;   edx=length of the text to Print
 ; Output:
-;   Prints the text to the screen
+;   none
 Print:
     mov     eax, 4          ;syswrite
     mov     ebx, 1          ;stdout 1 | stderr 3
@@ -10,9 +11,11 @@ Print:
     ret
 
 
+; Reads the keyboard input into a buffer
+; Input
 ;   ecx = input buffer
 ; Output:
-;   string read into the buffer referenced by ecx
+;   buffer = string read into the buffer referenced by ecx
 ;   eax = length of the string read
 Read_Input:
     mov     eax, 3          ;sysread

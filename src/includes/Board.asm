@@ -1,6 +1,7 @@
+; Places the token on the board in memory
 ; Input EAX=position to place the marker on
 ; Input ESI=Marker to place 
-; Output EAX=0 if placement successful
+; Output EAX=1 if placement successful EAX=0 if it fails
 Place_Token:
 
     ; find the position on the board
@@ -9,26 +10,46 @@ Place_Token:
     mov ecx, board
     add ecx, eax
 
-    ;   Check if the place is already occupied
+    ; Check if the place is valid location to place token
     cmp byte[ecx], '9'
     jg Token_Placement_Error
+
+    cmp byte[ecx], '0'
+    jl Token_Placement_Error
 
     ; Perform the placement
     mov [ecx], dl
 
-    mov eax, 0
+    mov eax, 1
     Placment_Attempt_Complete:
     ret
 
+
+
+
+
+
+; Prints the error message if user tries to place token in a occupied block
+; Input: none 
+; Output: none
 Token_Placement_Error:
     mov ecx, placement_error_txt
     mov edx, placement_error_txt_len
     call Print
-    mov eax,1
+    mov eax,0
     ret
 
 
+
+
+
+
+; Prints the Tic-Tac-Toe board in memory to the screen
+; Input: none 
+; Output: none
 Print_Board:
+    call Print_Empty_Line
+    call Print_Empty_Line
     mov ecx, 3 
     row_lo:
         push ecx
@@ -120,4 +141,6 @@ Print_Board:
         
         dec ecx
         jnz row_lo
+
+    call Print_Empty_Line
     ret

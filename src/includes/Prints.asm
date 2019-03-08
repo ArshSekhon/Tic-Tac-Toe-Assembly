@@ -1,5 +1,6 @@
-;   Prints the vs header
-;
+; Input: none
+; Output: none
+; Prints the game header
 Print_Game_Header:
     call Print_Name_Player_X
 
@@ -14,8 +15,12 @@ Print_Game_Header:
     call Print
     ret
 
+
+
+
 ; Input: none
-; Output: Print name of user X
+; Output: none
+; Prints the name of Player X
 Print_Name_Player_X:
     mov ecx, name_player_x
     mov edx, [name_player_x_len]
@@ -28,8 +33,10 @@ Print_Name_Player_X:
 
     ret
 
+
 ; Input: none
-; Output: Print name of user O
+; Output: none
+; Prints the name of Player O
 Print_Name_Player_O:
     mov ecx, name_player_o
     mov edx, [name_player_o_len]
@@ -42,6 +49,12 @@ Print_Name_Player_O:
 
     ret
 
+
+
+; Input: none
+; Output: none
+; Prints message stating that Player X won and exits the game
+
 Declare_Win_Player_X_And_Exit:
     call Print_Empty_Line
     
@@ -52,6 +65,11 @@ Declare_Win_Player_X_And_Exit:
     call Print
     jmp Exit
 
+
+
+; Input: none
+; Output: none
+; Prints message stating that Player Y won and exits the game
 Declare_Win_Player_Y_And_Exit:
     call Print_Empty_Line
 
@@ -61,6 +79,23 @@ Declare_Win_Player_Y_And_Exit:
     mov edx, winner_dec_text_len
     call Print
     jmp Exit
+
+
+
+; Input: none
+; Output: none
+; Prints message stating that draw occured and exits the game
+Declare_Draw_And_Exit:
+    mov ecx, draw_text
+    mov edx, draw_text_len
+    call Print
+    jmp Exit
+
+
+
+; Input: none
+; Output: none
+; Prints an empty line
 
 Print_Empty_Line:
     mov ecx, new_line_token

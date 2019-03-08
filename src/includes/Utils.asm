@@ -1,6 +1,7 @@
 ;https://stackoverflow.com/a/19312503
 STRING_TERMINATOR equ 0
 
+; Converts and string to an integer 
 ; Input:
 ; ESI = pointer to the string to convert
 ; ECX = number of digits in the string (must be > 0)
@@ -18,12 +19,11 @@ String_To_Integer:
   mov eax,ebx
   ret
 
-
-; Input:
-; EAX = integer value to convert
-; ESI = pointer to buffer to store the string in (must have room for at least 10 bytes)
-; Output:
-; EAX = pointer to the first character of the generated string
+; Converts and integer to a string 
+; Input:  EAX = integer value to convert
+;         ESI = pointer to buffer to store the string in (must have room for at least 10 bytes)
+;
+; Output: EAX = pointer to the first character of the generated string
 Integer_To_String:
   add esi,9
   mov byte [esi],STRING_TERMINATOR
@@ -40,6 +40,7 @@ Integer_To_String:
   mov eax,esi
   ret
 
+; Reads in the first character of string as an integer
 ; Input:
 ;   ESI = pointer to string to read
 ; Output:
