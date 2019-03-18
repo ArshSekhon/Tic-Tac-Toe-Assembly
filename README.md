@@ -21,4 +21,9 @@ sudo apt-get -y install nasm\
                         libc6-dev-i386
 ```
  This has been developed and tested using Ubuntu 18.04. 
-You can also use the dockerfile provided in the project to run the game in a docker container if not running linux.
+You can also use the dockerfile provided in the project to run the game in a docker container if not running linux. 
+
+Use following command to launch the docker container:
+```
+docker run -it -v "PATH_TO_THE_PROJECT_SRC_DIR":"/asm" --cap-add=SYS_PTRACE --security-opt seccomp=unconfined DOCKER_IMAGE_NAME bash
+```
