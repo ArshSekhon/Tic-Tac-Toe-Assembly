@@ -25,5 +25,5 @@ You can also use the dockerfile provided in the project to run the game in a doc
 
 Use following command to launch the docker container:
 ```
-docker run -it -v "PATH_TO_THE_PROJECT_SRC_DIR":"/asm" --cap-add=SYS_PTRACE --security-opt seccomp=unconfined DOCKER_IMAGE_NAME bash
+docker run -it -v "ABSOLUTE_PATH_TO_THE_PROJECT_SRC_DIR":"/asm" --cap-add=SYS_PTRACE --security-opt seccomp=unconfined DOCKER_IMAGE_NAME bash
 ```
