@@ -1,6 +1,5 @@
 # Tic-Tac-Toe in Assembly (NASM)
 **Author: Arshdeep Sekhon**
-**Student ID:** 300146479
 
 This is a basic Tic-Tac-Toe Game written entirely in assembly.
 ## Running the Game
